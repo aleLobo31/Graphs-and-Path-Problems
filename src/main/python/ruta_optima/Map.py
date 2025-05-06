@@ -60,9 +60,6 @@ class Map:
         # Generar las coordenadas geodésicas para cada celda del mapa
         lat_range = np.linspace(start=self.boundaries.min_lat, stop=self.boundaries.max_lat, num=self.height)
         lon_range = np.linspace(start=self.boundaries.min_lon, stop=self.boundaries.max_lon, num=self.width)
-        print(lat_range)
-        print(lon_range)
-        # Mostrar el rango de latitudes y longitudes
     
         # Iterar sobre cada celda del mapa
         for i, lat in enumerate(lat_range):

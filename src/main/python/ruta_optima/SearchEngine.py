@@ -31,7 +31,35 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
     #   -> Go left
     #   -> Go right
     # Not every point has always 4 possible neighbors
-    ...
+    G = nx.DiGraph()
+
+    # Obtener las dimensiones del mapa
+    height, width = detection_map.shape
+
+    # Definir los movimientos posibles (arriba, abajo, izquierda, derecha)
+    moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # (dy, dx)
+
+    # Iterar sobre cada celda del mapa
+    for y in range(height):
+        for x in range(width):
+            # Nodo actual
+            current_node = (y, x)
+
+            # Iterar sobre los movimientos posibles
+            for dy, dx in moves:
+                neighbor_y, neighbor_x = y + dy, x + dx
+
+                # Verificar si el vecino está dentro de los límites del mapa
+                if 0 <= neighbor_y < height and 0 <= neighbor_x < width:
+                    # Calcular el costo del movimiento
+                    cost = detection_map[neighbor_y, neighbor_x]
+
+                    # Agregar la arista al grafo si el costo está dentro de la tolerancia
+                    if cost <= tolerance:
+                        neighbor_node = (neighbor_y, neighbor_x)
+                        G.add_edge(current_node, neighbor_node, weight=cost)
+
+    return G
 
 def discretize_coords(high_level_plan: np.array, boundaries: Boundaries, map_width: np.int32, map_height: np.int32) -> np.array:
     """ Converts coordiantes from (lat, lon) into (x, y) """

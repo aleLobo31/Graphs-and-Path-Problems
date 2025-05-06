@@ -7,6 +7,7 @@ import os
 from Map import Map
 from Boundaries import Boundaries
 from SearchEngine import build_graph, path_finding, compute_path_cost, h1, h2
+import networkx as nx
 
 def plot_radar_locations(boundaries: Boundaries, radar_locations: np.array) -> None:
     """ Auxiliary function for plotting the radar locations """
@@ -69,6 +70,23 @@ def parse_args() -> dict:
     execution_parameters["tolerance"] = tolerance
     return execution_parameters
 
+def plot_graph_on_detection_map(G: nx.DiGraph, detection_map: np.array) -> None:
+    """ Plots the graph on top of the detection map """
+    plt.figure(figsize=(8, 8))
+    plt.title("Graph over Detection Map")
+
+    # Mostrar el mapa de detección
+    im = plt.imshow(X=detection_map, cmap='Greens', interpolation='bicubic')
+    plt.colorbar(im, label='Detection values')
+
+    # Dibujar el grafo
+    pos = {(y, x): (x, y) for y, x in G.nodes()}  # Convertir nodos a coordenadas (x, y) para graficar
+    nx.draw(G, pos, node_size=10, edge_color='blue', arrowsize=5, with_labels=False)
+
+    plt.xlabel("Longitude (discretized)")
+    plt.ylabel("Latitude (discretized)")
+    plt.show()
+
 # System's main function
 def main() -> None:
 
@@ -106,17 +124,11 @@ def main() -> None:
     # Build the graph from the detection map
     G = build_graph(detection_map=detection_map, tolerance=execution_parameters['tolerance'])
 
-    # Get the POI's that the plane must visit
-    POIs = np.array(execution_parameters['POIs'], dtype=np.float32)
+    # Print the graph summary
+    print(G)
+    # Output: DiGraph with 2 nodes and 2 edges
 
-    # Compute the solution
-    solution_plan, nodes_expanded = path_finding(G=G,
-                                 heuristic_function=h2,
-                                 locations=POIs, 
-                                 initial_location_index=0,
-                                 boundaries=boundaries,
-                                 map_width=M.width,
-                                 map_height=M.height)
+    plot_graph_on_detection_map(G=G, detection_map=detection_map)
     
     # Compute the solution cost
     path_cost = compute_path_cost(G=G, solution_plan=solution_plan)
