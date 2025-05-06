@@ -55,7 +55,7 @@ def plot_solution(detection_map: np.array, solution_plan: list, bicubic: bool=Tr
 
 def parse_args() -> dict:
     """ Parses the main arguments of the program and returns them stored in a dictionary """
-    json_path            = f"{os.getcwd()}/scenarios.json"
+    json_path            = f"{os.getcwd()}/src/unittest/scenarios.json"
     scenario_json        = sys.argv[1]
     tolerance            = float(sys.argv[2])
     execution_parameters = {}

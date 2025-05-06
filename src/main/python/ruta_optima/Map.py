@@ -60,6 +60,9 @@ class Map:
         # Generar las coordenadas geodésicas para cada celda del mapa
         lat_range = np.linspace(start=self.boundaries.min_lat, stop=self.boundaries.max_lat, num=self.height)
         lon_range = np.linspace(start=self.boundaries.min_lon, stop=self.boundaries.max_lon, num=self.width)
+        print(lat_range)
+        print(lon_range)
+        # Mostrar el rango de latitudes y longitudes
     
         # Iterar sobre cada celda del mapa
         for i, lat in enumerate(lat_range):
@@ -67,7 +70,7 @@ class Map:
                 # Calcular el nivel de detección acumulado de todos los radares en esta celda
                 detection_level = 0.0
                 for radar in self.radars:
-                    if detection_level > radar.compute_detection_level(latitude=lat, longitude=lon):
+                    if radar.compute_detection_level(latitude=lat, longitude=lon) > detection_level:
                         detection_level = radar.compute_detection_level(latitude=lat, longitude=lon)
                 
                 # Asegurarse de que el nivel de detección no sea menor que EPSILON
