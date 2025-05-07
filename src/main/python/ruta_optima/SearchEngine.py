@@ -8,18 +8,30 @@ from Map import EPSILON
 NODES_EXPANDED = 0
 
 def h1(current_node, objective_node) -> np.float32:
-    """ First heuristic to implement """
+    """ First heuristic: Manhattan distance multiplied by EPSILON """
     global NODES_EXPANDED
-    h = 0
-    ...
+
+    # Calcular la distancia Manhattan
+    manhattan_distance = abs(current_node[0] - objective_node[0]) + abs(current_node[1] - objective_node[1])
+
+    # Multiplicar por EPSILON
+    h = manhattan_distance * EPSILON
+
+    # Incrementar el contador de nodos expandidos
     NODES_EXPANDED += 1
+
     return h
 
 def h2(current_node, objective_node) -> np.float32:
-    """ Second heuristic to implement """
+    """ Segunda heurística: distancia euclidiana multiplicada por EPSILON """
     global NODES_EXPANDED
-    h = 0
-    ...
+
+    # Calcular la distancia euclidiana entre el nodo actual y el nodo objetivo
+    euclidean_distance = np.sqrt((current_node[0] - objective_node[0])**2 + (current_node[1] - objective_node[1])**2)
+
+    # Multiplicar la distancia por EPSILON para garantizar que sea admisible
+    h = euclidean_distance * EPSILON
+
     NODES_EXPANDED += 1
     return h
 
@@ -45,6 +57,9 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
             # Nodo actual
             current_node = (y, x)
 
+            # Agregar el nodo al grafo (incluso si no tiene conexiones)
+            G.add_node(current_node)
+
             # Iterar sobre los movimientos posibles
             for dy, dx in moves:
                 neighbor_y, neighbor_x = y + dy, x + dx
@@ -58,6 +73,7 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
                     if cost <= tolerance:
                         neighbor_node = (neighbor_y, neighbor_x)
                         G.add_edge(current_node, neighbor_node, weight=cost)
+                        G.add_edge(neighbor_node, current_node, weight=detection_map[neighbor_x, neighbor_y])  # Add reverse edge
 
     return G
 
