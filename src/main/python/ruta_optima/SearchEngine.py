@@ -8,11 +8,18 @@ from Map import EPSILON
 NODES_EXPANDED = 0
 
 def h1(current_node, objective_node) -> np.float32:
-    """ First heuristic to implement """
+    """ First heuristic: Manhattan distance multiplied by EPSILON """
     global NODES_EXPANDED
-    h = 0
-    ...
+
+    # Calcular la distancia Manhattan
+    manhattan_distance = abs(current_node[0] - objective_node[0]) + abs(current_node[1] - objective_node[1])
+
+    # Multiplicar por EPSILON
+    h = manhattan_distance * EPSILON
+
+    # Incrementar el contador de nodos expandidos
     NODES_EXPANDED += 1
+
     return h
 
 def h2(current_node, objective_node) -> np.float32:
