@@ -45,6 +45,9 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
             # Nodo actual
             current_node = (y, x)
 
+            # Agregar el nodo al grafo (incluso si no tiene conexiones)
+            G.add_node(current_node)
+
             # Iterar sobre los movimientos posibles
             for dy, dx in moves:
                 neighbor_y, neighbor_x = y + dy, x + dx
@@ -58,6 +61,7 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
                     if cost <= tolerance:
                         neighbor_node = (neighbor_y, neighbor_x)
                         G.add_edge(current_node, neighbor_node, weight=cost)
+                        G.add_edge(neighbor_node, current_node, weight=cost)
 
     return G
 
