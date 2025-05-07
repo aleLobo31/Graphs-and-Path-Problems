@@ -23,10 +23,15 @@ def h1(current_node, objective_node) -> np.float32:
     return h
 
 def h2(current_node, objective_node) -> np.float32:
-    """ Second heuristic to implement """
+    """ Segunda heurística: distancia euclidiana multiplicada por EPSILON """
     global NODES_EXPANDED
-    h = 0
-    ...
+
+    # Calcular la distancia euclidiana entre el nodo actual y el nodo objetivo
+    euclidean_distance = np.sqrt((current_node[0] - objective_node[0])**2 + (current_node[1] - objective_node[1])**2)
+
+    # Multiplicar la distancia por EPSILON para garantizar que sea admisible
+    h = euclidean_distance * EPSILON
+
     NODES_EXPANDED += 1
     return h
 
