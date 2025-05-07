@@ -62,8 +62,33 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
     return G
 
 def discretize_coords(high_level_plan: np.array, boundaries: Boundaries, map_width: np.int32, map_height: np.int32) -> np.array:
-    """ Converts coordiantes from (lat, lon) into (x, y) """
-    ...
+    """ Converts coordinates from (lat, lon) into (x, y) """
+    # Generate evenly spaced grid points for latitude and longitude
+    lat_grid = np.linspace(boundaries.min_lat, boundaries.max_lat, map_height)
+    lon_grid = np.linspace(boundaries.min_lon, boundaries.max_lon, map_width)
+
+    # Initialize the result array
+    discretized_plan = np.zeros((high_level_plan.shape[0], 2), dtype=np.int32)
+    
+    for i, (lat_coord, lon_coord) in enumerate(high_level_plan):
+        # Find the closest latitude index
+        min_value = np.inf
+        for idx, lat in enumerate(lat_grid):
+            aux = abs(lat_coord - lat)
+            if aux < min_value:
+                min_value = aux
+                discretized_plan[i][0] = idx
+
+        # Find the closest longitude index
+        min_value = np.inf
+        for idx, lon in enumerate(lon_grid):
+            aux = abs(lon_coord - lon)
+            if aux < min_value:
+                min_value = aux
+                discretized_plan[i][1] = idx
+
+    return discretized_plan
+        
 
 def path_finding(G: nx.DiGraph,
                  heuristic_function,
