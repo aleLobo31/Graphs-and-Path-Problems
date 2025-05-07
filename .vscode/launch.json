@@ -9,7 +9,7 @@
             "name": "Launch with arguments",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/main.py",
+            "program": "${workspaceFolder}/src/main/python/ruta_optima/main.py",
             "console": "integratedTerminal",
             "args": [ "scenario_8", "0.75" ] // Scenario ID and detection tolerance
         }
