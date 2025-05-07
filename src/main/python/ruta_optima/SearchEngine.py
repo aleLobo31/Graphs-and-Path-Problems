@@ -61,7 +61,7 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
                     if cost <= tolerance:
                         neighbor_node = (neighbor_y, neighbor_x)
                         G.add_edge(current_node, neighbor_node, weight=cost)
-                        G.add_edge(neighbor_node, current_node, weight=cost)
+                        G.add_edge(neighbor_node, current_node, weight=detection_map[neighbor_x, neighbor_y])  # Add reverse edge
 
     return G
 
