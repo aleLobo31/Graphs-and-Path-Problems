@@ -11,7 +11,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/src/main/python/ruta_optima/main.py",
             "console": "integratedTerminal",
-            "args": [ "scenario_2", "0.99" ] // Scenario ID and detection tolerance
+            "args": [ "scenario_0", "0.5" ] // Scenario ID and detection tolerance
         }
     ]
 }

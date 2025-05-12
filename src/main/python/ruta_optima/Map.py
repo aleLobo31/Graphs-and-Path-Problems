@@ -54,18 +54,40 @@ class Map:
     
     def compute_detection_map(self) -> np.array:
         """ Computes the detection map for each coordinate in the map (with all the radars) """
-        # Crear un mapa vacío para almacenar los valores de detección
         detection_map = np.full((self.height, self.width), EPSILON, dtype=np.float32)
-    
-        # Generar las coordenadas geodésicas para cada celda del mapa
+
+        # Use a dictionary for detection levels: key = "i_j", value = list of levels
+        detection_levels = {}
+
+        # Generate geodetic coordinates for each cell in the map
         lat_range = np.linspace(stop=self.boundaries.max_lat, start=self.boundaries.min_lat, num=self.height)
         lon_range = np.linspace(start=self.boundaries.min_lon, stop=self.boundaries.max_lon, num=self.width)
-    
-        # Iterar sobre cada celda del mapa
-        for radar in tqdm(self.radars, desc="Computing detection map", unit="radar"):
-            for i, lat in enumerate(lat_range):
-                for j, lon in enumerate(lon_range):
+
+        # Compute detection levels for each cell from each radar
+        min_level = np.inf
+        max_level = -np.inf
+        for i, lat in enumerate(lat_range):
+            for j, lon in enumerate(lon_range):
+                key = f"{i}_{j}"
+                if key not in detection_levels:
+                    detection_levels[key] = []
+                for radar in self.radars:
                     level = radar.compute_detection_level(latitude=lat, longitude=lon)
-                    if level > detection_map[i, j]:
-                        detection_map[i, j] = level 
+                    detection_levels[key].append(level)
+                    if level > max_level:
+                        max_level = level
+                    if level < min_level:
+                        min_level = level
+                # level = radar.compute_detection_level(latitude=lat, longitude=lon)
+                # if level > detection_map[i, j]:
+                #     detection_map[i, j] = level 
+
+        # Min-Max normalization for each cell
+        for key, levels in detection_levels.items():
+            if max_level - min_level > 0:
+                # Use the max normalized value for this cell
+                normalized_levels = [(level - min_level) / (max_level - min_level) * (1 - EPSILON) for level in levels]
+                i, j = map(int, key.split('_'))
+                detection_map[i, j] += max(normalized_levels)
+        
         return detection_map
