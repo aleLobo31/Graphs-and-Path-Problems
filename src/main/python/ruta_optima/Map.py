@@ -58,7 +58,7 @@ class Map:
         detection_map = np.full((self.height, self.width), EPSILON, dtype=np.float32)
     
         # Generar las coordenadas geodésicas para cada celda del mapa
-        lat_range = np.linspace(start=self.boundaries.max_lat, stop=self.boundaries.min_lat, num=self.height)
+        lat_range = np.linspace(stop=self.boundaries.max_lat, start=self.boundaries.min_lat, num=self.height)
         lon_range = np.linspace(start=self.boundaries.min_lon, stop=self.boundaries.max_lon, num=self.width)
     
         # Iterar sobre cada celda del mapa

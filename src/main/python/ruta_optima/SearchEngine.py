@@ -78,7 +78,7 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
     return G
 
 def discretize_coords(high_level_plan: np.array, boundaries: Boundaries, map_width: np.int32, map_height: np.int32) -> np.array:
-    """ Converts coordinates from (lat, lon) into (x, y) """
+    """ Converts coordinates from (lat, lon) into (x, y) grid indices """
     # Generate evenly spaced grid points for latitude and longitude
     lat_grid = np.linspace(boundaries.min_lat, boundaries.max_lat, map_height)
     lon_grid = np.linspace(boundaries.min_lon, boundaries.max_lon, map_width)
@@ -88,20 +88,12 @@ def discretize_coords(high_level_plan: np.array, boundaries: Boundaries, map_wid
     
     for i, (lat_coord, lon_coord) in enumerate(high_level_plan):
         # Find the closest latitude index
-        min_value = np.inf
-        for idx, lat in enumerate(lat_grid):
-            aux = abs(lat_coord - lat)
-            if aux < min_value:
-                min_value = aux
-                discretized_plan[i][0] = idx
+        lat_idx = np.argmin(np.abs(lat_grid - lat_coord))
+        discretized_plan[i][0] = lat_idx
 
         # Find the closest longitude index
-        min_value = np.inf
-        for idx, lon in enumerate(lon_grid):
-            aux = abs(lon_coord - lon)
-            if aux < min_value:
-                min_value = aux
-                discretized_plan[i][1] = idx
+        lon_idx = np.argmin(np.abs(lon_grid - lon_coord))
+        discretized_plan[i][1] = lon_idx
 
     return discretized_plan
         
@@ -114,8 +106,74 @@ def path_finding(G: nx.DiGraph,
                  map_width: np.int32,
                  map_height: np.int32) -> tuple:
     """ Implementation of the main searching / path finding algorithm """
-    ...
+    global NODES_EXPANDED
+    NODES_EXPANDED = 0  # Reset the nodes expanded counter
+
+    # Step 1: Order the locations based on proximity
+    ordered_locations = []
+    remaining_locations = locations.tolist()
+    current_location = remaining_locations.pop(initial_location_index)
+    ordered_locations.append(current_location)
+
+    while remaining_locations:
+        # Find the closest location to the current location
+        distances = [np.linalg.norm(np.array(current_location) - np.array(loc)) for loc in remaining_locations]
+        closest_index = np.argmin(distances)
+        current_location = remaining_locations.pop(closest_index)
+        ordered_locations.append(current_location)
+
+    ordered_locations = np.array(ordered_locations)
+
+    # Step 2: Discretize the ordered locations into grid coordinates
+    discretized_locations = discretize_coords(
+        high_level_plan=ordered_locations,
+        boundaries=boundaries,
+        map_width=map_width,
+        map_height=map_height
+    )
+
+    # Step 3: Find paths between all locations in order
+    solution_plan = []
+    current_index = 0  # Start from the first location in the ordered list
+
+    for next_index in range(1, len(discretized_locations)):
+        # Get the current and next location in the grid
+        start = tuple(discretized_locations[current_index])
+        goal = tuple(discretized_locations[next_index])
+
+        # Use A* to find the path between the current and next location
+        try:
+            path = nx.astar_path(
+                G,
+                source=start,
+                target=goal,
+                heuristic=lambda u, v: heuristic_function(u, v),
+                weight='weight'
+            )
+        except nx.NetworkXNoPath:
+            raise ValueError(f"No path found between {start} and {goal}.")
+
+        # Append the path to the solution plan
+        solution_plan.append(path)
+
+        # Update the current index
+        current_index = next_index
+
+    # Return the solution plan and the number of expanded nodes
+    return solution_plan, NODES_EXPANDED
 
 def compute_path_cost(G: nx.DiGraph, solution_plan: list) -> np.float32:
     """ Computes the total cost of the whole planning solution """
-    ...
+    total_cost = 0.0
+
+    # Iterate through each path in the solution plan
+    for path in solution_plan:
+        # Iterate through consecutive nodes in the path
+        for i in range(len(path) - 1):
+            start = path[i]
+            end = path[i + 1]
+
+            # Add the weight (cost) of the edge between start and end
+            total_cost += G[start][end]['weight']
+
+    return np.float32(total_cost)

@@ -9,8 +9,10 @@ from Boundaries import Boundaries
 from SearchEngine import build_graph, path_finding, compute_path_cost, h1, h2
 import networkx as nx
 
-def plot_radar_locations(boundaries: Boundaries, radar_locations: np.array) -> None:
+def plot_radar_locations(boundaries: Boundaries, radar_locations: np.array, POIs: list) -> None:
     """ Auxiliary function for plotting the radar locations """
+    POIs = np.array(POIs, dtype=np.float32)
+
     plt.figure(figsize=(8, 8))
     plt.title("Radar locations in the map")
     plt.plot([boundaries.min_lon, boundaries.max_lon, boundaries.max_lon, boundaries.min_lon, boundaries.min_lon],
@@ -18,7 +20,10 @@ def plot_radar_locations(boundaries: Boundaries, radar_locations: np.array) -> N
              label='Boundaries',
              linestyle='--',
              c='black')
+    # Plot radar locations
     plt.scatter(radar_locations[:, 1], radar_locations[:, 0], label='Radars', c='green')
+    # Plot POIs
+    plt.scatter(POIs[:, 1], POIs[:, 0], label='POIs', c='red', marker='x')
     plt.xlabel("Longitude")
     plt.ylabel("Latitude")
     plt.grid(True)
@@ -40,13 +45,13 @@ def plot_solution(detection_map: np.array, solution_plan: list, bicubic: bool=Tr
     plt.figure(figsize=(8,8))
     plt.title("Solution plan")
     for i in range(len(solution_plan)):
-        start_point = eval(solution_plan[i][0])
+        start_point = solution_plan[i][0]
         plt.scatter(start_point[1], start_point[0], c='black', marker='*', zorder=2)
         path_array = np.zeros(shape=(len(solution_plan[i]), 2))
         for j in range(len(path_array)):
-            path_array[j] = eval(solution_plan[i][j])
+            path_array[j] = solution_plan[i][j]
         plt.plot(path_array[:, 1], path_array[:, 0], zorder=1)
-    final_point = eval(solution_plan[-1][-1])
+    final_point = solution_plan[-1][-1]
     plt.scatter(final_point[1], final_point[0], c='black', marker='*', label=f'Waypoints', zorder=2)
     im = plt.imshow(X=detection_map, cmap='Greens', interpolation='bicubic' if bicubic else None)
     plt.colorbar(im, label='Detection values')
@@ -113,7 +118,7 @@ def main() -> None:
     radar_locations = M.get_radars_locations_numpy()
 
     # Plot the radar locations (latitude increments from bottom to top)
-    plot_radar_locations(boundaries=boundaries, radar_locations=radar_locations)
+    plot_radar_locations(boundaries=boundaries, radar_locations=radar_locations, POIs=execution_parameters['POIs'])	
 
     # Compute the detection map (sets the costs for each cell)
     detection_map = M.compute_detection_map()
@@ -125,15 +130,29 @@ def main() -> None:
     G = build_graph(detection_map=detection_map, tolerance=execution_parameters['tolerance'])
 
     # Print the graph summary
-    print(G)
-    # Output: DiGraph with 2 nodes and 2 edges
+    # print(G)
 
+    # Output: DiGraph with 2 nodes and 2 edges
     plot_graph_on_detection_map(G=G, detection_map=detection_map)
+    
+    # Get the POI's that the plane must visit
+    POIs = np.array(execution_parameters['POIs'], dtype=np.float32)
+
+    # Compute the solution
+    solution_plan, nodes_expanded = path_finding(G=G,
+                                 heuristic_function=h2,
+                                 locations=POIs, 
+                                 initial_location_index=0,
+                                 boundaries=boundaries,
+                                 map_width=M.width,
+                                 map_height=M.height)
+    
+    # print(f"Solution plan: {solution_plan}")
     
     # Compute the solution cost
     path_cost = compute_path_cost(G=G, solution_plan=solution_plan)
 
-    # Some verbose of the total cost and the number of expanded nodes
+    # # Some verbose of the total cost and the number of expanded nodes
     print(f"Total path cost: {path_cost}")
     print(f"Number of expanded nodes: {nodes_expanded}")
 
