@@ -63,13 +63,13 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
                     neighbor_node = (neighbor_y, neighbor_x)
                     # Calcular el costo del movimiento como el valor de detección de la celda destino.
                     cost_to_neighbor = detection_map[neighbor_y, neighbor_x]
-                    # Calcular el coste del movimiento al inverso al nodo actual
+                    # Calcular el coste del movimiento inverso al nodo actual
                     cost_to_current = detection_map[y, x]
                     # Agregar la arista al grafo si el costo está dentro de la tolerancia
                     if cost_to_neighbor <= tolerance:
                         G.add_edge(current_node, neighbor_node, weight=cost_to_neighbor)
                     if cost_to_current <= tolerance:
-                        G.add_edge(neighbor_node, current_node, weight=detection_map[neighbor_x, neighbor_y])  # Add reverse edge
+                        G.add_edge(neighbor_node, current_node, weight=cost_to_current)
     return G
 
 def discretize_coords(high_level_plan: np.array, boundaries: Boundaries, map_width: np.int32, map_height: np.int32) -> np.array:
