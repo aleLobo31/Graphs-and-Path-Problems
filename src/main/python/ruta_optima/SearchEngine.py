@@ -87,7 +87,7 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
 def discretize_coords(high_level_plan: np.array, boundaries: Boundaries, map_width: np.int32, map_height: np.int32) -> np.array:
     """ Converts coordinates from (lat, lon) into (x, y) grid indices """
     # Generate evenly spaced grid points for latitude and longitude
-    lat_grid = np.linspace(boundaries.min_lat, boundaries.max_lat, map_height)
+    lat_grid = np.linspace(boundaries.max_lat, boundaries.min_lat, map_height)
     lon_grid = np.linspace(boundaries.min_lon, boundaries.max_lon, map_width)
 
     # Initialize the result array
