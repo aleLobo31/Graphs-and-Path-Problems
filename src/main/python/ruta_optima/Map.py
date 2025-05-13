@@ -54,7 +54,7 @@ class Map:
     
     def compute_detection_map(self) -> np.array:
         """ Computes the detection map for each coordinate in the map (with all the radars) """
-        detection_map = np.full((self.height, self.width), EPSILON, dtype=np.float32)
+        detection_map = np.full((self.height, self.width), EPSILON, dtype=np.float64)
 
         # Use a dictionary for detection levels: key = "i_j", value = list of levels
         detection_levels = {}

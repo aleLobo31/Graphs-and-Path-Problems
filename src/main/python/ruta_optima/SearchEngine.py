@@ -37,24 +37,18 @@ def h2(current_node, objective_node) -> np.float32:
 
 def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
     """ Builds an adjacency graph (not an adjacency matrix) from the detection map """
-    # The only possible connections from a point in space (now a node in the graph) are:
-    #   -> Go up
-    #   -> Go down
-    #   -> Go left
-    #   -> Go right
-    # Not every point has always 4 possible neighbors
+    # Crear un grafo dirigido
     G = nx.DiGraph()
 
     # Obtener las dimensiones del mapa
     height, width = detection_map.shape
 
-    # Definir los movimientos posibles (arriba, abajo, izquierda, derecha)
-    moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # (dy, dx)
+    # Solo exploramos hacia abajo y a la derecha para evitar duplicar aristas
+    moves = [(1, 0), (0, 1)]
 
     # Iterar sobre cada celda del mapa
     for y in range(height):
         for x in range(width):
-            # Nodo actual
             current_node = (y, x)
 
             # Agregar el nodo al grafo (incluso si no tiene conexiones)
@@ -66,15 +60,16 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
 
                 # Verificar si el vecino está dentro de los límites del mapa
                 if 0 <= neighbor_y < height and 0 <= neighbor_x < width:
-                    # Calcular el costo del movimiento
-                    cost = detection_map[neighbor_y, neighbor_x]
-
+                    neighbor_node = (neighbor_y, neighbor_x)
+                    # Calcular el costo del movimiento como el valor de detección de la celda destino.
+                    cost_to_neighbor = detection_map[neighbor_y, neighbor_x]
+                    # Calcular el coste del movimiento al inverso al nodo actual
+                    cost_to_current = detection_map[y, x]
                     # Agregar la arista al grafo si el costo está dentro de la tolerancia
-                    if cost <= tolerance:
-                        neighbor_node = (neighbor_y, neighbor_x)
-                        G.add_edge(current_node, neighbor_node, weight=cost)
+                    if cost_to_neighbor <= tolerance:
+                        G.add_edge(current_node, neighbor_node, weight=cost_to_neighbor)
+                    if cost_to_current <= tolerance:
                         G.add_edge(neighbor_node, current_node, weight=detection_map[neighbor_x, neighbor_y])  # Add reverse edge
-
     return G
 
 def discretize_coords(high_level_plan: np.array, boundaries: Boundaries, map_width: np.int32, map_height: np.int32) -> np.array:

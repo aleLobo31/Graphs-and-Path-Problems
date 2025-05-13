@@ -10,8 +10,8 @@ from SearchEngine import build_graph, path_finding, compute_path_cost, h1, h2
 import networkx as nx
 
 def plot_radar_locations(boundaries: Boundaries, radar_locations: np.array, POIs: list) -> None:
-    """ Auxiliary function for plotting the radar locations """
-    POIs = np.array(POIs, dtype=np.float32)
+    """ Auxiliary function for plotting the radar locations and the POIs """
+    POIs = np.array(POIs, dtype=np.float64)
 
     plt.figure(figsize=(8, 8))
     plt.title("Radar locations in the map")
@@ -132,11 +132,11 @@ def main() -> None:
     # Print the graph summary
     # print(G)
 
-    # Output: DiGraph with 2 nodes and 2 edges
+    # Plot the graph on top of the detection map
     plot_graph_on_detection_map(G=G, detection_map=detection_map)
     
     # Get the POI's that the plane must visit
-    POIs = np.array(execution_parameters['POIs'], dtype=np.float32)
+    POIs = np.array(execution_parameters['POIs'], dtype=np.float64)
 
     # Compute the solution
     solution_plan, nodes_expanded = path_finding(G=G,
