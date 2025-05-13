@@ -142,7 +142,7 @@ def path_finding(G: nx.DiGraph,
                 G,
                 source=start,
                 target=goal,
-                heuristic=lambda u, v: heuristic_function(u, v),
+                heuristic=heuristic_function,
                 weight='weight'
             )
         except nx.NetworkXNoPath:
