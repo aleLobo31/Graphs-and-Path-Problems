@@ -7,6 +7,18 @@ from Map import EPSILON
 # Number of nodes expanded in the heuristic search (stored in a global variable to be updated from the heuristic functions)
 NODES_EXPANDED = 0
 
+def h0(current_node, objective_node) -> np.float32:
+    """ First heuristic: Manhattan distance multiplied by EPSILON """
+    global NODES_EXPANDED
+
+    # Multiplicar por EPSILON
+    h = 0
+
+    # Incrementar el contador de nodos expandidos
+    NODES_EXPANDED += 1
+
+    return h
+
 def h1(current_node, objective_node) -> np.float32:
     """ First heuristic: Manhattan distance multiplied by EPSILON """
     global NODES_EXPANDED
@@ -112,7 +124,7 @@ def path_finding(G: nx.DiGraph,
 
     while remaining_locations:
         # Find the closest location to the current location
-        distances = [np.linalg.norm(np.array(current_location) - np.array(loc)) for loc in remaining_locations]
+        distances = [abs(current_location[0] - loc[0]) + abs(current_location[1] - loc[1]) for loc in remaining_locations]
         closest_index = np.argmin(distances)
         current_location = remaining_locations.pop(closest_index)
         ordered_locations.append(current_location)

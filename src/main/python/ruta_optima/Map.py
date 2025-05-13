@@ -54,7 +54,7 @@ class Map:
     
     def compute_detection_map(self) -> np.array:
         """ Computes the detection map for each coordinate in the map (with all the radars) """
-        detection_map = np.full((self.height, self.width), EPSILON, dtype=np.float32)
+        """detection_map = np.full((self.height, self.width), EPSILON, dtype=np.float64)
 
         # Use a dictionary for detection levels: key = "i_j", value = list of levels
         detection_levels = {}
@@ -86,8 +86,29 @@ class Map:
         for key, levels in detection_levels.items():
             if max_level - min_level > 0:
                 # Use the max normalized value for this cell
-                normalized_levels = [(level - min_level) / (max_level - min_level) * (1 - EPSILON) for level in levels]
+                normalized_levels = [((level - min_level) / (max_level - min_level)) * (1 - EPSILON) + EPSILON for level in levels]
                 i, j = map(int, key.split('_'))
-                detection_map[i, j] += max(normalized_levels)
+                detection_map[i, j] = max(normalized_levels)
         
+        return detection_map"""
+        """ Computes the detection map for each coordinate in the map (with all the radars) """
+        # Inicializa el array del mapa de detección
+        detection_map = np.full(shape=(self.height, self.width), fill_value=EPSILON, dtype=np.float32)
+        lat_range = np.linspace(self.boundaries.max_lat, self.boundaries.min_lat, self.height)
+        lon_range = np.linspace(self.boundaries.min_lon, self.boundaries.max_lon, self.width)
+        # Añade el nivel de detección a cada celda del mapa
+        for radar in tqdm(self.radars, desc="Computing detection map", unit="radar"):
+            for i, lat in enumerate(lat_range):
+                for j, lon in enumerate(lon_range):
+                    level = radar.compute_detection_level(latitude=lat, longitude=lon)
+                    # Si el nivel de detección es mayor que el actual, lo actualizamos
+                    if detection_map[i, j] < level:
+                        detection_map[i, j] = level
+        # Normalizamos el mapa de detección
+        min_value = np.min(detection_map)
+        max_value = np.max(detection_map)
+        if min_value == max_value:
+            detection_map = np.full(shape=(self.height, self.width), fill_value=EPSILON, dtype=np.float32)
+        else:
+            detection_map = ((detection_map - min_value) / (max_value - min_value)) * (1 - EPSILON) + EPSILON
         return detection_map
