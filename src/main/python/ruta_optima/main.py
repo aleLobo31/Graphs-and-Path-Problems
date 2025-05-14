@@ -2,12 +2,26 @@
 import os
 import sys
 import json
+import time
+import psutil
+import threading
 import numpy as np
 
 from Map import Map
 from Boundaries import Boundaries
 from SearchEngine import SearchEngine
 from utils.plot_utils import plot_radar_locations, plot_detection_fields, plot_graph_on_detection_map, plot_solution
+
+def resource_monitor(threshold=0.5, check_interval=1):
+    """Terminates the process if RAM usage exceeds the given fraction of total system RAM."""
+    process = psutil.Process(os.getpid())
+    total_mem = psutil.virtual_memory().total
+    while True:
+        mem = process.memory_info().rss
+        if mem > threshold * total_mem:
+            print(f"Memory usage exceeded {threshold*100:.0f}% of system RAM. Terminating.")
+            os._exit(1)  # Immediately kill the process
+        time.sleep(check_interval)
 
 def parse_args() -> dict:
     """ Parses the main arguments of the program and returns them stored in a dictionary """
@@ -99,4 +113,6 @@ def main() -> None:
     plot_solution(detection_map=detection_map, solution_plan=solution_plan)
 
 if __name__ == '__main__':
+    monitor_thread = threading.Thread(target=resource_monitor, args=(0.5, 1), daemon=True)
+    monitor_thread.start()
     main()
