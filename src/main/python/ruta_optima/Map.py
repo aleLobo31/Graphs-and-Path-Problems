@@ -12,19 +12,15 @@ class Map:
     """ Class that models the map for the simulation """
     def __init__(self, 
                  boundaries: Boundaries,
-                 height:     np.int32, 
-                 width:      np.int32, 
                  radars:     np.array=None):
         self.boundaries = boundaries        # Boundaries of the map
-        self.height     = height            # Number of coordinates in the y-axis
-        self.width      = width             # Number of coordinates int the x-axis
         self.radars     = radars            # List containing the radars (objects)
 
     def generate_radars(self, n_radars: np.int32) -> None:
         """ Generates n-radars randomly and inserts them into the radars list """
         # Select random coordinates inside the boundaries of the map
-        lat_range = np.linspace(start=self.boundaries.min_lat, stop=self.boundaries.max_lat, num=self.height)
-        lon_range = np.linspace(start=self.boundaries.min_lon, stop=self.boundaries.max_lon, num=self.width)
+        lat_range = self.boundaries.lat_range
+        lon_range = self.boundaries.lon_range
         rand_lats = np.random.choice(a=lat_range, size=n_radars, replace=False)
         rand_lons = np.random.choice(a=lon_range, size=n_radars, replace=False)
         self.radars = []        # Initialize 'radars' as an empty list
@@ -54,48 +50,11 @@ class Map:
     
     def compute_detection_map(self) -> np.array:
         """ Computes the detection map for each coordinate in the map (with all the radars) """
-        """detection_map = np.full((self.height, self.width), EPSILON, dtype=np.float64)
-
-        # Use a dictionary for detection levels: key = "i_j", value = list of levels
-        detection_levels = {}
-
-        # Generate geodetic coordinates for each cell in the map
-        lat_range = np.linspace(stop=self.boundaries.max_lat, start=self.boundaries.min_lat, num=self.height)
-        lon_range = np.linspace(start=self.boundaries.min_lon, stop=self.boundaries.max_lon, num=self.width)
-
-        # Compute detection levels for each cell from each radar
-        min_level = np.inf
-        max_level = -np.inf
-        for i, lat in enumerate(lat_range):
-            for j, lon in enumerate(lon_range):
-                key = f"{i}_{j}"
-                if key not in detection_levels:
-                    detection_levels[key] = []
-                for radar in self.radars:
-                    level = radar.compute_detection_level(latitude=lat, longitude=lon)
-                    detection_levels[key].append(level)
-                    if level > max_level:
-                        max_level = level
-                    if level < min_level:
-                        min_level = level
-                # level = radar.compute_detection_level(latitude=lat, longitude=lon)
-                # if level > detection_map[i, j]:
-                #     detection_map[i, j] = level 
-
-        # Min-Max normalization for each cell
-        for key, levels in detection_levels.items():
-            if max_level - min_level > 0:
-                # Use the max normalized value for this cell
-                normalized_levels = [((level - min_level) / (max_level - min_level)) * (1 - EPSILON) + EPSILON for level in levels]
-                i, j = map(int, key.split('_'))
-                detection_map[i, j] = max(normalized_levels)
-        
-        return detection_map"""
-        """ Computes the detection map for each coordinate in the map (with all the radars) """
         # Inicializa el array del mapa de detección
-        detection_map = np.full(shape=(self.height, self.width), fill_value=EPSILON, dtype=np.float32)
-        lat_range = np.linspace(self.boundaries.max_lat, self.boundaries.min_lat, self.height)
-        lon_range = np.linspace(self.boundaries.min_lon, self.boundaries.max_lon, self.width)
+        detection_map = np.full(shape=(self.boundaries.height, self.boundaries.width), fill_value=EPSILON, dtype=np.float32)
+        lat_range = self.boundaries.lat_range
+        lon_range = self.boundaries.lon_range
+
         # Añade el nivel de detección a cada celda del mapa
         for radar in tqdm(self.radars, desc="Computing detection map", unit="radar"):
             for i, lat in enumerate(lat_range):
@@ -104,11 +63,12 @@ class Map:
                     # Si el nivel de detección es mayor que el actual, lo actualizamos
                     if detection_map[i, j] < level:
                         detection_map[i, j] = level
+
         # Normalizamos el mapa de detección
         min_value = np.min(detection_map)
         max_value = np.max(detection_map)
         if min_value == max_value:
-            detection_map = np.full(shape=(self.height, self.width), fill_value=EPSILON, dtype=np.float32)
+            detection_map = np.full(shape=(self.boundaries.height, self.boundaries.width), fill_value=EPSILON, dtype=np.float32)
         else:
             detection_map = ((detection_map - min_value) / (max_value - min_value)) * (1 - EPSILON) + EPSILON
         return detection_map

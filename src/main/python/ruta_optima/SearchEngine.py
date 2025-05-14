@@ -11,10 +11,10 @@ def h0(current_node, objective_node) -> np.float32:
     """ First heuristic: Manhattan distance multiplied by EPSILON """
     global NODES_EXPANDED
 
-    # Multiplicar por EPSILON
+    # Multiply by EPSILON
     h = 0
 
-    # Incrementar el contador de nodos expandidos
+    # Increment the expanded nodes counter
     NODES_EXPANDED += 1
 
     return h
@@ -23,27 +23,28 @@ def h1(current_node, objective_node) -> np.float32:
     """ First heuristic: Manhattan distance multiplied by EPSILON """
     global NODES_EXPANDED
 
-    # Calcular la distancia Manhattan
+    # Calculate the Manhattan distance
     manhattan_distance = abs(current_node[0] - objective_node[0]) + abs(current_node[1] - objective_node[1])
 
-    # Multiplicar por EPSILON
+    # Multiply by EPSILON
     h = manhattan_distance * EPSILON
 
-    # Incrementar el contador de nodos expandidos
+    # Increment the expanded nodes counter
     NODES_EXPANDED += 1
 
     return h
 
 def h2(current_node, objective_node) -> np.float32:
-    """ Segunda heurística: distancia euclidiana multiplicada por EPSILON """
+    """ Second heuristic: Euclidean distance multiplied by EPSILON """
     global NODES_EXPANDED
 
-    # Calcular la distancia euclidiana entre el nodo actual y el nodo objetivo
+    # Calculate the Euclidean distance between the current node and the objective node
     euclidean_distance = np.sqrt((current_node[0] - objective_node[0])**2 + (current_node[1] - objective_node[1])**2)
 
-    # Multiplicar la distancia por EPSILON para garantizar que sea admisible
+    # Multiply the distance by EPSILON to ensure admissibility
     h = euclidean_distance * EPSILON
 
+    # Increment the expanded nodes counter
     NODES_EXPANDED += 1
     return h
 
@@ -84,11 +85,11 @@ def build_graph(detection_map: np.array, tolerance: np.float32) -> nx.DiGraph:
                         G.add_edge(neighbor_node, current_node, weight=cost_to_current)
     return G
 
-def discretize_coords(high_level_plan: np.array, boundaries: Boundaries, map_width: np.int32, map_height: np.int32) -> np.array:
+def discretize_coords(high_level_plan: np.array, boundaries: Boundaries) -> np.array:
     """ Converts coordinates from (lat, lon) into (x, y) grid indices """
     # Generate evenly spaced grid points for latitude and longitude
-    lat_grid = np.linspace(boundaries.max_lat, boundaries.min_lat, map_height)
-    lon_grid = np.linspace(boundaries.min_lon, boundaries.max_lon, map_width)
+    lat_grid = boundaries.lat_range
+    lon_grid = boundaries.lon_range
 
     # Initialize the result array
     discretized_plan = np.zeros((high_level_plan.shape[0], 2), dtype=np.int32)
@@ -109,9 +110,7 @@ def path_finding(G: nx.DiGraph,
                  heuristic_function,
                  locations: np.array, 
                  initial_location_index: np.int32, 
-                 boundaries: Boundaries,
-                 map_width: np.int32,
-                 map_height: np.int32) -> tuple:
+                 boundaries: Boundaries) -> tuple:
     """ Implementation of the main searching / path finding algorithm """
     global NODES_EXPANDED
     NODES_EXPANDED = 0  # Reset the nodes expanded counter
@@ -134,9 +133,7 @@ def path_finding(G: nx.DiGraph,
     # Step 2: Discretize the ordered locations into grid coordinates
     discretized_locations = discretize_coords(
         high_level_plan=ordered_locations,
-        boundaries=boundaries,
-        map_width=map_width,
-        map_height=map_height
+        boundaries=boundaries
     )
 
     # Step 3: Find paths between all locations in order

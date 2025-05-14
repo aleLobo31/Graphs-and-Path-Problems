@@ -105,12 +105,12 @@ def main() -> None:
     boundaries = Boundaries(max_lat=execution_parameters['max_lat'],
                             min_lat=execution_parameters['min_lat'],
                             max_lon=execution_parameters['max_lon'],
-                            min_lon=execution_parameters['min_lon'])
+                            min_lon=execution_parameters['min_lon'],
+                            height=execution_parameters['H'],
+                            width=execution_parameters['W'],)
     
     # Define the map with its corresponding boundaries and coordinates
-    M = Map(boundaries=boundaries,
-            height=execution_parameters['H'],
-            width=execution_parameters['W'])
+    M = Map(boundaries=boundaries)
     
     # Generate random radars
     n_radars = execution_parameters['n_radars']
@@ -143,12 +143,8 @@ def main() -> None:
                                  heuristic_function=h1,
                                  locations=POIs, 
                                  initial_location_index=0,
-                                 boundaries=boundaries,
-                                 map_width=M.width,
-                                 map_height=M.height)
-    
-    # print(f"Solution plan: {solution_plan}")
-    
+                                 boundaries=boundaries)
+        
     # Compute the solution cost
     path_cost = compute_path_cost(G=G, solution_plan=solution_plan)
 
