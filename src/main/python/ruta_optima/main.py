@@ -6,7 +6,7 @@ import json
 import os
 from Map import Map
 from Boundaries import Boundaries
-from SearchEngine import build_graph, path_finding, compute_path_cost, h1, h2
+from SearchEngine import SearchEngine
 import networkx as nx
 
 def plot_radar_locations(boundaries: Boundaries, radar_locations: np.array, POIs: list) -> None:
@@ -127,10 +127,9 @@ def main() -> None:
     plot_detection_fields(detection_map=detection_map)
 
     # Build the graph from the detection map
-    G = build_graph(detection_map=detection_map, tolerance=execution_parameters['tolerance'])
-
-    # Print the graph summary
-    # print(G)
+    G = SearchEngine(detection_map=detection_map,
+                     tolerance=execution_parameters['tolerance'],
+                     boundaries=boundaries)
 
     # Plot the graph on top of the detection map
     plot_graph_on_detection_map(G=G, detection_map=detection_map)
@@ -139,14 +138,13 @@ def main() -> None:
     POIs = np.array(execution_parameters['POIs'], dtype=np.float64)
 
     # Compute the solution
-    solution_plan, nodes_expanded = path_finding(G=G,
-                                 heuristic_function=h1,
+    solution_plan, nodes_expanded = G.path_finding(
+                                 heuristic_function=G.h1,
                                  locations=POIs, 
-                                 initial_location_index=0,
-                                 boundaries=boundaries)
+                                 initial_location_index=0)
         
     # Compute the solution cost
-    path_cost = compute_path_cost(G=G, solution_plan=solution_plan)
+    path_cost = G.compute_path_cost(solution_plan=solution_plan)
 
     # # Some verbose of the total cost and the number of expanded nodes
     print(f"Total path cost: {path_cost}")
