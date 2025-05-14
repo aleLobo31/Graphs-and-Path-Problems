@@ -120,6 +120,9 @@ class SearchEngine(DiGraph):
                     locations: np.array, 
                     initial_location_index: np.int32) -> tuple:
         """ Implementation of the main searching / path finding algorithm """
+        # Step 0: Reset expanded nodes counter
+        self.nodes_expanded = 0
+        
         # Step 1: Order the locations based on proximity
         ordered_locations = self.order_locations(locations, initial_location_index)
 
