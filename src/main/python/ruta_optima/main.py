@@ -31,6 +31,18 @@ def main() -> None:
     # Parse the input parameters (arguments) of the program (current execution)
     execution_parameters = parse_args()
 
+    # Verificación de cantidad de POIs
+    if len(execution_parameters['POIs']) < 2:
+        raise ValueError("Debe haber al menos dos POIs para calcular una ruta.")
+
+    # Verificar si la tolerancia está fuera del rango permitido
+    if not (0 <= execution_parameters['tolerance'] <= 1):
+        raise ValueError("El valor de tolerancia debe estar entre 0 y 1.")
+    
+    # Verificar que el tamaño del grid no exceda 2048
+    if execution_parameters['H'] > 2048 or execution_parameters['W'] > 2048:
+        raise ValueError("El tamaño del grid (altura y anchura) no puede exceder 2048.")
+
     # Set the pseudo-random number generator seed (DO NOT MODIFY)
     np.random.seed(42)
 
