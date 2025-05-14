@@ -90,6 +90,30 @@ class SearchEngine(DiGraph):
             discretized_plan[i][1] = lon_idx
 
         return discretized_plan
+    
+    def order_locations(self, locations, initial_location_index):
+        # Initialize the ordered list of locations
+        ordered_locations = []
+        # Convert the input locations to a list for easier manipulation
+        remaining_locations = locations.tolist()
+        # Remove and store the initial location based on the given index
+        current_location = remaining_locations.pop(initial_location_index)
+        ordered_locations.append(current_location)
+
+        # Continue until all locations have been ordered
+        while len(remaining_locations) != 0:
+            # Compute Manhattan distances from the current location to all remaining locations
+            distances = [abs(current_location[0] - loc[0]) + abs(current_location[1] - loc[1]) for loc in remaining_locations]
+            # Find the index of the closest location
+            closest_index = np.argmin(distances)
+            # Remove the closest location from the list and set it as the current location
+            current_location = remaining_locations.pop(closest_index)
+            # Add the closest location to the ordered list
+            ordered_locations.append(current_location)
+
+        # Convert the ordered list back to a numpy array and return it
+        ordered_locations = np.array(ordered_locations)
+        return ordered_locations
 
     def path_finding(self,
                     heuristic_function,
@@ -97,19 +121,7 @@ class SearchEngine(DiGraph):
                     initial_location_index: np.int32) -> tuple:
         """ Implementation of the main searching / path finding algorithm """
         # Step 1: Order the locations based on proximity
-        ordered_locations = []
-        remaining_locations = locations.tolist()
-        current_location = remaining_locations.pop(initial_location_index)
-        ordered_locations.append(current_location)
-
-        while remaining_locations:
-            # Find the closest location to the current location
-            distances = [abs(current_location[0] - loc[0]) + abs(current_location[1] - loc[1]) for loc in remaining_locations]
-            closest_index = np.argmin(distances)
-            current_location = remaining_locations.pop(closest_index)
-            ordered_locations.append(current_location)
-
-        ordered_locations = np.array(ordered_locations)
+        ordered_locations = self.order_locations(locations, initial_location_index)
 
         # Step 2: Discretize the ordered locations into grid coordinates
         discretized_locations = self.discretize_coords(

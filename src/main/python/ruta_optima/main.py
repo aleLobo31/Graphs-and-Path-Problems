@@ -75,7 +75,7 @@ def parse_args() -> dict:
     execution_parameters["tolerance"] = tolerance
     return execution_parameters
 
-def plot_graph_on_detection_map(G: nx.DiGraph, detection_map: np.array) -> None:
+def plot_graph_on_detection_map(G: SearchEngine, detection_map: np.array) -> None:
     """ Plots the graph on top of the detection map """
     plt.figure(figsize=(8, 8))
     plt.title("Graph over Detection Map")
