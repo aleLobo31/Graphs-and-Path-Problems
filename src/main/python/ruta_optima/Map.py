@@ -50,21 +50,21 @@ class Map:
     
     def compute_detection_map(self) -> np.array:
         """ Computes the detection map for each coordinate in the map (with all the radars) """
-        # Inicializa el array del mapa de detección
+        # Initialize the detection map array
         detection_map = np.full(shape=(self.boundaries.height, self.boundaries.width), fill_value=EPSILON, dtype=np.float32)
         lat_range = self.boundaries.lat_range
         lon_range = self.boundaries.lon_range
 
-        # Añade el nivel de detección a cada celda del mapa
+        # Add the detection level to each cell of the map
         for radar in tqdm(self.radars, desc="Computing detection map", unit="radar"):
             for i, lat in enumerate(lat_range):
                 for j, lon in enumerate(lon_range):
                     level = radar.compute_detection_level(latitude=lat, longitude=lon)
-                    # Si el nivel de detección es mayor que el actual, lo actualizamos
+                    # If the detection level is greater than the current one, update it
                     if detection_map[i, j] < level:
                         detection_map[i, j] = level
 
-        # Normalizamos el mapa de detección
+        # Normalize the detection map
         min_value = np.min(detection_map)
         max_value = np.max(detection_map)
         if min_value == max_value:

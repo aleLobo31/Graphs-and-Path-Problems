@@ -80,11 +80,11 @@ def plot_graph_on_detection_map(G: SearchEngine, detection_map: np.array) -> Non
     plt.figure(figsize=(8, 8))
     plt.title("Graph over Detection Map")
 
-    # Mostrar el mapa de detección
+    # Show the detection map
     im = plt.imshow(X=detection_map, cmap='Greens', interpolation='bicubic')
     plt.colorbar(im, label='Detection values')
 
-    # Dibujar el grafo
+    # Plot the graph
     pos = {(y, x): (x, y) for y, x in G.nodes()}  # Convertir nodos a coordenadas (x, y) para graficar
     nx.draw(G, pos, node_size=10, edge_color='blue', arrowsize=5, with_labels=False)
 
