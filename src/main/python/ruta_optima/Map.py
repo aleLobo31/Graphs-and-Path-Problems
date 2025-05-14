@@ -51,7 +51,7 @@ class Map:
     def compute_detection_map(self) -> np.array:
         """ Computes the detection map for each coordinate in the map (with all the radars) """
         # Initialize the detection map array
-        detection_map = np.full(shape=(self.boundaries.height, self.boundaries.width), fill_value=EPSILON, dtype=np.float32)
+        detection_map = np.zeros(shape=(self.boundaries.height, self.boundaries.width), dtype=np.float32)
         lat_range = self.boundaries.lat_range
         lon_range = self.boundaries.lon_range
 
