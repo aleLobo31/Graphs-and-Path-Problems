@@ -18,8 +18,9 @@ def resource_monitor(threshold=0.5, check_interval=1):
     total_mem = psutil.virtual_memory().total
     while True:
         mem = process.memory_info().rss
+        print(f"Memory usage: {mem / (1024 * 1024):.2f} MB of {total_mem / (1024 * 1024):.2f} MB")
         if mem > threshold * total_mem:
-            print(f"Memory usage exceeded {threshold*100:.0f}% of system RAM. Terminating.")
+            print(f"Memory usage exceeded {threshold*100:.2f}% of system RAM. Terminating.")
             os._exit(1)  # Immediately kill the process
         time.sleep(check_interval)
 
@@ -113,6 +114,6 @@ def main() -> None:
     plot_solution(detection_map=detection_map, solution_plan=solution_plan)
 
 if __name__ == '__main__':
-    monitor_thread = threading.Thread(target=resource_monitor, args=(0.5, 1), daemon=True)
+    monitor_thread = threading.Thread(target=resource_monitor, args=(0.005, 2), daemon=True)
     monitor_thread.start()
     main()
