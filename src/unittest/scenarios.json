@@ -1,5 +1,43 @@
 [
     {
+        "scenario_test_POI_unico": {
+            "max_lat": 37.25,
+            "min_lat": 37.2,
+            "max_lon": -115.8,
+            "min_lon": -115.85,
+            "W": 8,
+            "H": 8,
+            "n_radars": 3,
+            "POIs": [
+                [
+                    37.23481811,
+                    -115.81250635
+                ]
+            ]
+        }
+    },
+    {
+        "scenario_test_2_POIS": {
+            "max_lat": 37.25,
+            "min_lat": 37.20,
+            "max_lon": -115.80,
+            "min_lon": -115.85,
+            "W": 4,
+            "H": 4,
+            "n_radars": 1,
+            "POIs": [
+                [
+                    37.20,
+                    -115.85
+                ],
+                [
+                    37.25,
+                    -115.80
+                ]
+            ]
+        }
+    },
+    {
         "scenario_size_small": {
             "max_lat": 37.25,
             "min_lat": 37.20,
@@ -7,6 +45,27 @@
             "min_lon": -115.85,
             "W": 2,
             "H": 2,
+            "n_radars": 1,
+            "POIs": [
+                [
+                    37.206,
+                    -115.848
+                ],
+                [
+                    37.245,
+                    -115.802
+                ]
+            ]
+        }
+    },
+    {
+        "scenario_size_large": {
+            "max_lat": 37.25,
+            "min_lat": 37.20,
+            "max_lon": -115.80,
+            "min_lon": -115.85,
+            "W": 2048,
+            "H": 2048,
             "n_radars": 3,
             "POIs": [
                 [
@@ -16,6 +75,178 @@
                 [
                     37.245,
                     -115.802
+                ]
+            ]
+        }
+    },
+    {
+        "scenario_size_too_large": {
+            "max_lat": 37.25,
+            "min_lat": 37.20,
+            "max_lon": -115.80,
+            "min_lon": -115.85,
+            "W": 300000,
+            "H": 300000,
+            "n_radars": 3,
+            "POIs": [
+                [
+                    37.206,
+                    -115.848
+                ],
+                [
+                    37.245,
+                    -115.802
+                ]
+            ]
+        }
+    },
+    {
+        "scenario_size_medium": {
+            "max_lat": 37.25,
+            "min_lat": 37.20,
+            "max_lon": -115.80,
+            "min_lon": -115.85,
+            "W": 32,
+            "H": 32,
+            "n_radars": 3,
+            "POIs": [
+                [
+                    37.206,
+                    -115.848
+                ],
+                [
+                    37.245,
+                    -115.802
+                ]
+            ]
+        }
+    },
+    {
+        "scenario_size_rect_small": {
+            "max_lat": 37.25,
+            "min_lat": 37.20,
+            "max_lon": -115.80,
+            "min_lon": -115.85,
+            "W": 2,
+            "H": 4,
+            "n_radars": 2,
+            "POIs": [
+                [
+                    37.206,
+                    -115.848
+                ],
+                [
+                    37.245,
+                    -115.802
+                ]
+            ]
+        }
+    },
+    {
+        "scenario_size_rect_large": {
+            "max_lat": 37.25,
+            "min_lat": 37.20,
+            "max_lon": -115.80,
+            "min_lon": -115.85,
+            "W": 1024,
+            "H": 2048,
+            "n_radars": 3,
+            "POIs": [
+                [
+                    37.206,
+                    -115.848
+                ],
+                [
+                    37.245,
+                    -115.802
+                ]
+            ]
+        }
+    },
+    {
+        "scenario_size_rect_too_large": {
+            "max_lat": 37.25,
+            "min_lat": 37.20,
+            "max_lon": -115.80,
+            "min_lon": -115.85,
+            "W": 4096,
+            "H": 64,
+            "n_radars": 3,
+            "POIs": [
+                [
+                    37.206,
+                    -115.848
+                ],
+                [
+                    37.245,
+                    -115.802
+                ]
+            ]
+        }
+    },
+    {
+        "scenario_size_rect_medium": {
+            "max_lat": 37.25,
+            "min_lat": 37.20,
+            "max_lon": -115.80,
+            "min_lon": -115.85,
+            "W": 64,
+            "H": 32,
+            "n_radars": 3,
+            "POIs": [
+                [
+                    37.206,
+                    -115.848
+                ],
+                [
+                    37.245,
+                    -115.802
+                ]
+            ]
+        }
+    },
+    {
+        "scenario_zero_radars": {
+            "max_lat": 37.25,
+            "min_lat": 37.2,
+            "max_lon": -115.8,
+            "min_lon": -115.85,
+            "W": 8,
+            "H": 8,
+            "n_radars": 0,
+            "POIs": [
+                [
+                    37.20,
+                    -115.85
+                ],
+                [
+                    37.25,
+                    -115.80
+                ]
+            ]
+        }
+    },
+    {
+        "scenario_test_too_much_radars": {
+            "max_lat": 37.25,
+            "min_lat": 37.2,
+            "max_lon": -115.8,
+            "min_lon": -115.85,
+            "W": 8,
+            "H": 8,
+            "n_radars": 100,
+            "POIs": [
+                [
+                    37.20679264,
+                    -115.84867714
+                ],
+                [
+                    37.24289363,
+                    -115.80858421
+                ],
+                [
+                    37.23389098,
+                    -115.80217183
                 ]
             ]
         }
@@ -100,48 +331,6 @@
         }
     },
     {
-        "scenario_pois_far": {
-            "max_lat": 37.25,
-            "min_lat": 37.2,
-            "max_lon": -115.8,
-            "min_lon": -115.85,
-            "W": 10,
-            "H": 10,
-            "n_radars": 3,
-            "POIs": [
-                [
-                    37.25,
-                    -115.85
-                ],
-                [
-                    37.2,
-                    -115.8
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_pois_same_coord": {
-            "max_lat": 37.25,
-            "min_lat": 37.2,
-            "max_lon": -115.8,
-            "min_lon": -115.85,
-            "W": 6,
-            "H": 6,
-            "n_radars": 1,
-            "POIs": [
-                [
-                    37.225,
-                    -115.825
-                ],
-                [
-                    37.225,
-                    -115.825
-                ]
-            ]
-        }
-    },
-    {
         "scenario_pois_outside_grid": {
             "max_lat": 37.25,
             "min_lat": 37.2,
@@ -163,254 +352,6 @@
         }
     },
     {
-        "scenario_pois_same_cell_after_discretization": {
-            "max_lat": 37.25,
-            "min_lat": 37.2,
-            "max_lon": -115.8,
-            "min_lon": -115.85,
-            "W": 8,
-            "H": 8,
-            "n_radars": 2,
-            "POIs": [
-                [
-                    37.224,
-                    -115.826
-                ],
-                [
-                    37.2241,
-                    -115.8261
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_poi_non_traversable": {
-            "max_lat": 37.25,
-            "min_lat": 37.2,
-            "max_lon": -115.8,
-            "min_lon": -115.85,
-            "W": 8,
-            "H": 8,
-            "n_radars": 1,
-            "POIs": [
-                [
-                    37.225,
-                    -115.825
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_size_large": {
-            "max_lat": 37.25,
-            "min_lat": 37.20,
-            "max_lon": -115.80,
-            "min_lon": -115.85,
-            "W": 512,
-            "H": 512,
-            "n_radars": 3,
-            "POIs": [
-                [
-                    37.206,
-                    -115.848
-                ],
-                [
-                    37.245,
-                    -115.802
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_size_too_large": {
-            "max_lat": 37.25,
-            "min_lat": 37.20,
-            "max_lon": -115.80,
-            "min_lon": -115.85,
-            "W": 3000,
-            "H": 3000,
-            "n_radars": 3,
-            "POIs": [
-                [
-                    37.206,
-                    -115.848
-                ],
-                [
-                    37.245,
-                    -115.802
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_size_medium": {
-            "max_lat": 37.25,
-            "min_lat": 37.20,
-            "max_lon": -115.80,
-            "min_lon": -115.85,
-            "W": 32,
-            "H": 32,
-            "n_radars": 3,
-            "POIs": [
-                [
-                    37.206,
-                    -115.848
-                ],
-                [
-                    37.245,
-                    -115.802
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_size_rect_small": {
-            "max_lat": 37.25,
-            "min_lat": 37.20,
-            "max_lon": -115.80,
-            "min_lon": -115.85,
-            "W": 2,
-            "H": 4,
-            "n_radars": 3,
-            "POIs": [
-                [
-                    37.206,
-                    -115.848
-                ],
-                [
-                    37.245,
-                    -115.802
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_size_rect_large": {
-            "max_lat": 37.25,
-            "min_lat": 37.20,
-            "max_lon": -115.80,
-            "min_lon": -115.85,
-            "W": 128,
-            "H": 512,
-            "n_radars": 3,
-            "POIs": [
-                [
-                    37.206,
-                    -115.848
-                ],
-                [
-                    37.245,
-                    -115.802
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_size_rect_too_large": {
-            "max_lat": 37.25,
-            "min_lat": 37.20,
-            "max_lon": -115.80,
-            "min_lon": -115.85,
-            "W": 4096,
-            "H": 64,
-            "n_radars": 3,
-            "POIs": [
-                [
-                    37.206,
-                    -115.848
-                ],
-                [
-                    37.245,
-                    -115.802
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_size_rect_medium": {
-            "max_lat": 37.25,
-            "min_lat": 37.20,
-            "max_lon": -115.80,
-            "min_lon": -115.85,
-            "W": 64,
-            "H": 32,
-            "n_radars": 3,
-            "POIs": [
-                [
-                    37.206,
-                    -115.848
-                ],
-                [
-                    37.245,
-                    -115.802
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_test_2_POIS": {
-            "max_lat": 37.25,
-            "min_lat": 37.20,
-            "max_lon": -115.80,
-            "min_lon": -115.85,
-            "W": 4,
-            "H": 4,
-            "n_radars": 1,
-            "POIs": [
-                [
-                    37.20,
-                    -115.85
-                ],
-                [
-                    37.25,
-                    -115.80
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_test_multiples_POIS": {
-            "max_lat": 37.25,
-            "min_lat": 37.2,
-            "max_lon": -115.8,
-            "min_lon": -115.85,
-            "W": 8,
-            "H": 8,
-            "n_radars": 4,
-            "POIs": [
-                [
-                    37.20679264,
-                    -115.84867714
-                ],
-                [
-                    37.24289363,
-                    -115.80858421
-                ],
-                [
-                    37.23389098,
-                    -115.80217183
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_test_POI_unico": {
-            "max_lat": 37.25,
-            "min_lat": 37.2,
-            "max_lon": -115.8,
-            "min_lon": -115.85,
-            "W": 8,
-            "H": 8,
-            "n_radars": 3,
-            "POIs": [
-                [
-                    37.23481811,
-                    -115.81250635
-                ]
-            ]
-        }
-    },
-    {
         "scenario_multiple_equal_paths": {
             "max_lat": 37.25,
             "min_lat": 37.2,
@@ -427,73 +368,6 @@
                 [
                     37.25,
                     -115.8
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_blocked_path": {
-            "max_lat": 37.25,
-            "min_lat": 37.2,
-            "max_lon": -115.8,
-            "min_lon": -115.85,
-            "W": 4,
-            "H": 4,
-            "n_radars": 1,
-            "POIs": [
-                [
-                    37.2,
-                    -115.85
-                ],
-                [
-                    37.25,
-                    -115.8
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_zero_radars": {
-            "max_lat": 37.25,
-            "min_lat": 37.2,
-            "max_lon": -115.8,
-            "min_lon": -115.85,
-            "W": 8,
-            "H": 8,
-            "n_radars": 0,
-            "POIs": [
-                [
-                    37.20,
-                    -115.85
-                ],
-                [
-                    37.25,
-                    -115.80
-                ]
-            ]
-        }
-    },
-    {
-        "scenario_test_too_much_radars": {
-            "max_lat": 37.25,
-            "min_lat": 37.2,
-            "max_lon": -115.8,
-            "min_lon": -115.85,
-            "W": 8,
-            "H": 8,
-            "n_radars": 100,
-            "POIs": [
-                [
-                    37.20679264,
-                    -115.84867714
-                ],
-                [
-                    37.24289363,
-                    -115.80858421
-                ],
-                [
-                    37.23389098,
-                    -115.80217183
                 ]
             ]
         }

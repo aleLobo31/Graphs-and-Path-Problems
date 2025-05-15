@@ -53,10 +53,17 @@ def parse_args() -> dict:
     if execution_parameters['n_radars'] > execution_parameters['H'] * execution_parameters['W']:
         raise ValueError("El número de radares no puede ser mayor que el número de celdas en el grid (H * W).")
     
-    # Check if the grid size exceeds 2048x2048
-    if execution_parameters['H'] > 2048 or execution_parameters['W'] > 2048:
-        raise ValueError("El tamaño del grid (altura y anchura) no puede exceder 2048.")
-
+    # # Check that all POIs are within the boundaries
+    min_lat = round(execution_parameters['min_lat'], 6)
+    max_lat = round(execution_parameters['max_lat'], 6)
+    min_lon = round(execution_parameters['min_lon'], 6)
+    max_lon = round(execution_parameters['max_lon'], 6)
+    for poi in execution_parameters['POIs']:
+        lat = round(poi[0], 6)
+        lon = round(poi[1], 6)
+        if not (min_lat <= lat <= max_lat) or not (min_lon <= lon <= max_lon):
+            raise ValueError(f"El POI {poi} está fuera de los límites definidos.")
+    
     return execution_parameters
 
 def main() -> None:
@@ -105,7 +112,7 @@ def main() -> None:
 
     # Compute the solution
     solution_plan, nodes_expanded = G.path_finding(
-                                 heuristic_function=G.h1,
+                                 heuristic_function=G.h2,
                                  locations=POIs, 
                                  initial_location_index=0)
         

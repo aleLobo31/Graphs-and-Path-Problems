@@ -48,6 +48,18 @@ class SearchEngine(DiGraph):
                             self.add_edge(neighbour_node, current_node, weight=cost_to_current)
 
     def h1(self, current_node: tuple, objective_node: tuple) -> np.float32:
+        """ Second heuristic: Euclidean distance multiplied by EPSILON """
+        # Calculate the Euclidean distance between the current node and the objective node
+        euclidean_distance = np.sqrt((current_node[0] - objective_node[0])**2 + (current_node[1] - objective_node[1])**2)
+
+        # Multiply the distance by EPSILON to ensure admissibility
+        h = euclidean_distance * EPSILON
+
+        # Increment the expanded nodes counter
+        self.nodes_expanded += 1
+        return h
+    
+    def h2(self, current_node: tuple, objective_node: tuple) -> np.float32:
         """ First heuristic: Manhattan distance multiplied by EPSILON """
         # Calculate the Manhattan distance
         manhattan_distance = abs(current_node[0] - objective_node[0]) + abs(current_node[1] - objective_node[1])
@@ -58,18 +70,6 @@ class SearchEngine(DiGraph):
         # Increment the expanded nodes counter
         self.nodes_expanded += 1
 
-        return h
-
-    def h2(self, current_node: tuple, objective_node: tuple) -> np.float32:
-        """ Second heuristic: Euclidean distance multiplied by EPSILON """
-        # Calculate the Euclidean distance between the current node and the objective node
-        euclidean_distance = np.sqrt((current_node[0] - objective_node[0])**2 + (current_node[1] - objective_node[1])**2)
-
-        # Multiply the distance by EPSILON to ensure admissibility
-        h = euclidean_distance * EPSILON
-
-        # Increment the expanded nodes counter
-        self.nodes_expanded += 1
         return h
     
     def discretize_coords(self, high_level_plan: np.array) -> np.array:
