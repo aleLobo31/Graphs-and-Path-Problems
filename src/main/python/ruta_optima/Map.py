@@ -62,10 +62,10 @@ class Map:
                 for j, lon in enumerate(lon_range):
                     level = radar.compute_detection_level(latitude=lat, longitude=lon)
                     # If the detection level is greater than the current one, update it
-                    if detection_map[i, j] < level:
+                    if level > detection_map[i, j]:
                         detection_map[i, j] = level
 
-        # Normalize the detection map
+        # Normalize the detection using the min-max method
         min_value = np.min(detection_map)
         max_value = np.max(detection_map)
         if min_value == max_value:
