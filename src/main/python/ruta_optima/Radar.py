@@ -1,5 +1,6 @@
 # Required imports
 import numpy as np
+
 from Location import Location
 
 class Radar:

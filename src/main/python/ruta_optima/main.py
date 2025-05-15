@@ -12,6 +12,8 @@ from Boundaries import Boundaries
 from SearchEngine import SearchEngine
 from utils.plot_utils import plot_radar_locations, plot_detection_fields, plot_graph_on_detection_map, plot_solution
 
+MEMORY_THRESHOLD = 0.5  # 50% of total system RAM
+
 def resource_monitor(threshold=0.5, check_interval=1):
     """Terminates the process if RAM usage exceeds the given fraction of total system RAM."""
     process = psutil.Process(os.getpid())
@@ -96,7 +98,7 @@ def main() -> None:
                      boundaries=boundaries)
 
     # Plot the graph on top of the detection map
-    plot_graph_on_detection_map(G=G, detection_map=detection_map)
+    # plot_graph_on_detection_map(G=G, detection_map=detection_map)
     
     # Get the POI's that the plane must visit
     POIs = np.array(execution_parameters['POIs'], dtype=np.float32)
@@ -118,6 +120,6 @@ def main() -> None:
     plot_solution(detection_map=detection_map, solution_plan=solution_plan)
 
 if __name__ == '__main__':
-    monitor_thread = threading.Thread(target=resource_monitor, args=(0.5, 2), daemon=True)
+    monitor_thread = threading.Thread(target=resource_monitor, args=(MEMORY_THRESHOLD, 2), daemon=True)
     monitor_thread.start()
     main()

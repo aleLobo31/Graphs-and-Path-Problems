@@ -1,5 +1,6 @@
 import numpy as np
 import networkx as nx
+
 from Map import EPSILON
 from networkx import DiGraph
 from Boundaries import Boundaries
@@ -46,7 +47,7 @@ class SearchEngine(DiGraph):
                         if cost_to_current <= tolerance:
                             self.add_edge(neighbour_node, current_node, weight=cost_to_current)
 
-    def h1(self, current_node, objective_node) -> np.float32:
+    def h1(self, current_node: tuple, objective_node: tuple) -> np.float32:
         """ First heuristic: Manhattan distance multiplied by EPSILON """
         # Calculate the Manhattan distance
         manhattan_distance = abs(current_node[0] - objective_node[0]) + abs(current_node[1] - objective_node[1])
@@ -59,7 +60,7 @@ class SearchEngine(DiGraph):
 
         return h
 
-    def h2(self, current_node, objective_node) -> np.float32:
+    def h2(self, current_node: tuple, objective_node: tuple) -> np.float32:
         """ Second heuristic: Euclidean distance multiplied by EPSILON """
         # Calculate the Euclidean distance between the current node and the objective node
         euclidean_distance = np.sqrt((current_node[0] - objective_node[0])**2 + (current_node[1] - objective_node[1])**2)
@@ -91,7 +92,7 @@ class SearchEngine(DiGraph):
 
         return discretized_plan
     
-    def order_locations(self, locations, initial_location_index):
+    def order_locations(self, locations: np.array, initial_location_index: int):
         # Initialize the ordered list of locations
         ordered_locations = []
         # Convert the input locations to a list for easier manipulation
@@ -116,7 +117,7 @@ class SearchEngine(DiGraph):
         return ordered_locations
 
     def path_finding(self,
-                    heuristic_function,
+                    heuristic_function: callable,
                     locations: np.array, 
                     initial_location_index: np.int32) -> tuple:
         """ Implementation of the main searching / path finding algorithm """
