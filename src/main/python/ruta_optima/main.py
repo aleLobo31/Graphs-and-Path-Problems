@@ -54,6 +54,9 @@ def main() -> None:
     if not (0 <= execution_parameters['tolerance'] <= 1):
         raise ValueError("El valor de tolerancia debe estar entre 0 y 1.")
     
+    if execution_parameters['n_radars'] > execution_parameters['H'] * execution_parameters['W']:
+        raise ValueError("El número de radares no puede ser mayor que el número de celdas en el grid (H * W).")
+    
     # Verificar que el tamaño del grid no exceda 2048
     if execution_parameters['H'] > 2048 or execution_parameters['W'] > 2048:
         raise ValueError("El tamaño del grid (altura y anchura) no puede exceder 2048.")
