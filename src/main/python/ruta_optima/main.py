@@ -38,13 +38,6 @@ def parse_args() -> dict:
                 execution_parameters = entry[key]
                 break
     execution_parameters["tolerance"] = tolerance
-    return execution_parameters
-
-# System's main function
-def main() -> None:
-
-    # Parse the input parameters (arguments) of the program (current execution)
-    execution_parameters = parse_args()
 
     # Verificación de cantidad de POIs
     if len(execution_parameters['POIs']) < 2:
@@ -60,6 +53,14 @@ def main() -> None:
     # Verificar que el tamaño del grid no exceda 2048
     if execution_parameters['H'] > 2048 or execution_parameters['W'] > 2048:
         raise ValueError("El tamaño del grid (altura y anchura) no puede exceder 2048.")
+
+    return execution_parameters
+
+# System's main function
+def main() -> None:
+
+    # Parse the input parameters (arguments) of the program (current execution)
+    execution_parameters = parse_args()
 
     # Set the pseudo-random number generator seed (DO NOT MODIFY)
     np.random.seed(42)
