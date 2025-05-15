@@ -8,7 +8,7 @@ from SearchEngine import SearchEngine
 
 def plot_radar_locations(boundaries: Boundaries, radar_locations: np.array, POIs: list) -> None:
     """ Auxiliary function for plotting the radar locations and the POIs """
-    POIs = np.array(POIs, dtype=np.float64)
+    POIs = np.array(POIs, dtype=np.float32)
 
     plt.figure(figsize=(8, 8))
     plt.title("Radar locations in the map")
@@ -66,7 +66,7 @@ def plot_graph_on_detection_map(G: SearchEngine, detection_map: np.array) -> Non
     plt.colorbar(im, label='Detection values')
 
     # Plot the graph
-    pos = {(y, x): (x, y) for y, x in G.nodes()}  # Convertir nodos a coordenadas (x, y) para graficar
+    pos = {(y, x): (x, y) for y, x in G.nodes()}  # Convert nodes to (x, y) coordinates for plotting
     nx.draw(G, pos, node_size=10, edge_color='blue', arrowsize=5, with_labels=False)
 
     plt.xlabel("Longitude (discretized)")

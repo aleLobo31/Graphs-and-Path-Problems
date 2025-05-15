@@ -39,24 +39,24 @@ def parse_args() -> dict:
                 break
     execution_parameters["tolerance"] = tolerance
 
-    # Verificación de cantidad de POIs
+    # Check that there are at least two POIs
     if len(execution_parameters['POIs']) < 2:
         raise ValueError("Debe haber al menos dos POIs para calcular una ruta.")
 
-    # Verificar si la tolerancia está fuera del rango permitido
-    if not (0 <= execution_parameters['tolerance'] <= 1):
-        raise ValueError("El valor de tolerancia debe estar entre 0 y 1.")
+    # Check that the tolerance value is between 0 and 1
+    if not (0 < execution_parameters['tolerance'] <= 1):
+        raise ValueError("El valor de tolerancia debe ser mayor que 0 y menor o igual que 1.")
     
+    # Check if the number of radars is greater than the number of cells in the grid
     if execution_parameters['n_radars'] > execution_parameters['H'] * execution_parameters['W']:
         raise ValueError("El número de radares no puede ser mayor que el número de celdas en el grid (H * W).")
     
-    # Verificar que el tamaño del grid no exceda 2048
+    # Check if the grid size exceeds 2048x2048
     if execution_parameters['H'] > 2048 or execution_parameters['W'] > 2048:
         raise ValueError("El tamaño del grid (altura y anchura) no puede exceder 2048.")
 
     return execution_parameters
 
-# System's main function
 def main() -> None:
 
     # Parse the input parameters (arguments) of the program (current execution)
@@ -99,7 +99,7 @@ def main() -> None:
     plot_graph_on_detection_map(G=G, detection_map=detection_map)
     
     # Get the POI's that the plane must visit
-    POIs = np.array(execution_parameters['POIs'], dtype=np.float64)
+    POIs = np.array(execution_parameters['POIs'], dtype=np.float32)
 
     # Compute the solution
     solution_plan, nodes_expanded = G.path_finding(
@@ -110,7 +110,7 @@ def main() -> None:
     # Compute the solution cost
     path_cost = G.compute_path_cost(solution_plan=solution_plan)
 
-    # # Some verbose of the total cost and the number of expanded nodes
+    # Some verbose of the total cost and the number of expanded nodes
     print(f"Total path cost: {path_cost}")
     print(f"Number of expanded nodes: {nodes_expanded}")
 
@@ -118,6 +118,6 @@ def main() -> None:
     plot_solution(detection_map=detection_map, solution_plan=solution_plan)
 
 if __name__ == '__main__':
-    monitor_thread = threading.Thread(target=resource_monitor, args=(0.005, 2), daemon=True)
+    monitor_thread = threading.Thread(target=resource_monitor, args=(0.5, 2), daemon=True)
     monitor_thread.start()
     main()
